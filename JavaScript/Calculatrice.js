@@ -58,60 +58,98 @@ const textButtMoy = document.getElementById("Moy").textContent;
 const textButtvirgule = document.getElementById("virgule").textContent;
 const textButtegale = document.getElementById("egale").textContent;
 
-console.log(sept)
+let listeTape = '';
+let listeCalcul = new Array;
 
-// sept.addEventListener("click", function(){
-//     console.log("bonjour salima, abir, chris!", textButtSept);
-// });
+console.log(sept)
 
 CE.addEventListener("click", function(){Clear()});
 supprimer.addEventListener("click", function(){Retour()});  
-pourcent.addEventListener("click", function(){    Pourcent()});
-addition.addEventListener("click", function(){    Calculatrice(textButtaddition)});
+pourcent.addEventListener("click", function(){    Operation(textButtpourcent)});
+addition.addEventListener("click", function(){    Operation(textButtaddition)});
 
 sept.addEventListener("click", function(){   Calculatrice(textButtsept)});
 huit.addEventListener("click", function(){    Calculatrice(textButthuit)});
 neuf.addEventListener("click", function(){    Calculatrice(textButtneuf)});
-moins.addEventListener("click", function(){    Calculatrice(textButtmoins)});
+moins.addEventListener("click", function(){    Operation(textButtmoins)});
 
 quatre.addEventListener("click", function(){    Calculatrice(textButtquatre)});
 cinq.addEventListener("click", function(){    Calculatrice(textButtcinq)});
 six.addEventListener("click", function(){    Calculatrice(textButtsix)});
-multiple.addEventListener("click", function(){    Calculatrice(textButtmultiple)});
+multiple.addEventListener("click", function(){    Operation(textButtmultiple)});
 
 un.addEventListener("click", function(){    Calculatrice(textButtun)});
 deux.addEventListener("click", function(){    Calculatrice(textButtdeux)});
 trois.addEventListener("click", function(){    Calculatrice(textButttrois)});
-division.addEventListener("click", function(){    Calculatrice(textButtdivision)});
+division.addEventListener("click", function(){    Operation(textButtdivision)});
 
 zero.addEventListener("click", function(){    Calculatrice(textButtzero)});
 Moy.addEventListener("click", function(){    Moyenne()});
 virgule.addEventListener("click", function(){    Calculatrice(textButtvirgule)});
-egale.addEventListener("click", function(){    Calculatrice(textButtegale)});
+egale.addEventListener("click", function(){    Resultat()});
 
 function Calculatrice(valeur){
     console.log("bonjour salima, abir, chris!")
     console.log("La valeur est numerique " + typeof valeur)
     document.getElementById("Screen").value += valeur;
+    listeTape += valeur;
+    console.log("elemTape " + listeTape);
+    console.log("Array Elements:",listeCalcul);
+}
 
+function Operation(typeOperation){
+    document.getElementById("Screen").value += typeOperation;
+    listeCalcul.push(listeTape);
+    listeCalcul.push(typeOperation);
+    listeTape = ""
+    console.log(listeCalcul)
 }
 
 function Clear(){
     document.getElementById("Screen").value = "";
+    listeCalcul = [];
+    listeTape = "";
+    console.log("Liste calcul CE:" + listeCalcul)
 }
 
 function Retour(){
-    let ListeCalcul = new Array();
-    ListeCalcul = document.getElementById("Screen").value;
-    console.log("Array Elements:", ListeCalcul );
-    popped = ListeCalcul.pop;
-    console.log("Removed Element:", popped);
-    console.log("Remaining Array Elements:", ListeCalcul );
-    document.getElementById("Screen").value = ListeCalcul;
+    let listeElem = new Array();
+    listeElem = document.getElementById("Screen").value;
+    console.log("Array Elements:",listeElem);
+
+    document.getElementById("Screen").value = "";
+    for (let i = 0; i < listeElem.length - 1; i++){
+        document.getElementById("Screen").value += listeElem[i];
+    }
 }
 
 function Resultat(){
-
+    let a = 0;
+    let b = 0;
+    let ResultatCalcul = 0;
+    listeCalcul.push(listeTape);
+    console.log("Liste Calcul " + listeCalcul)
+    for (let i = 0; i < listeCalcul.length; i++){
+        switch (listeCalcul[i]){
+            case "+":
+                ResultatCalcul = Number(listeCalcul[i-1]) + Number(listeCalcul[i + 1])
+                break;
+            case "-":
+                ResultatCalcul = Number(listeCalcul[i-1]) - Number(listeCalcul[i + 1])
+                break;
+            case "/":
+                ResultatCalcul = Number(listeCalcul[i-1]) / Number(listeCalcul[i + 1])
+                break;
+            case "*":
+                ResultatCalcul = Number(listeCalcul[i-1]) * Number(listeCalcul[i + 1])
+                break;
+            case "%":
+                ResultatCalcul = Number(listeCalcul[i + 1]) / Number(listeCalcul[i - 1]) * 100
+                break;
+        }
+    }
+    console.log(ResultatCalcul)
+    document.getElementById("Screen").value +=  " = " + ResultatCalcul
 }
 
 function Pourcent(){
@@ -119,5 +157,20 @@ function Pourcent(){
 }
 
 function Moyenne(){
+    let SommeDeTout = 0;
+    let nbElem = 0;
     console.log("Moyenne")
+    listeCalcul.push(listeTape);
+    for (let i = 0; i < listeCalcul.length; i++){
+        if (listeCalcul[i] != "+" && listeCalcul[i] != "-" && listeCalcul[i] != "*" && listeCalcul[i] != "/") {
+            console.log("Element " + listeCalcul[i]);
+            SommeDeTout += Number(listeCalcul[i]);
+            console.log("Somme " + SommeDeTout);
+            nbElem += 1;
+        }
+
+    }
+
+    document.getElementById("Screen").value +=  " Moyene " + SommeDeTout / nbElem;
+    
 }
